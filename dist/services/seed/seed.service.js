@@ -20,6 +20,7 @@ let SeedService = class SeedService {
     }
     async seed() {
         try {
+            console.log('🌱 Starting data seeding...');
             const existingYourUser = await this.usersService.findByEmail('fa20bcs017@gmail.com');
             if (!existingYourUser) {
                 await this.usersService.createUser({
@@ -35,6 +36,7 @@ let SeedService = class SeedService {
             else {
                 console.log('ℹ️  Your user (fa20bcs017@gmail.com) already exists');
             }
+            await new Promise((resolve) => setTimeout(resolve, 200));
             const existingUser = await this.usersService.findByEmail('admin@investorlift.com');
             if (!existingUser) {
                 await this.usersService.createUser({
@@ -50,6 +52,7 @@ let SeedService = class SeedService {
             else {
                 console.log('ℹ️  Admin user already exists');
             }
+            await new Promise((resolve) => setTimeout(resolve, 200));
             const existingTestUser = await this.usersService.findByEmail('test@investorlift.com');
             if (!existingTestUser) {
                 await this.usersService.createUser({
@@ -65,6 +68,7 @@ let SeedService = class SeedService {
             else {
                 console.log('ℹ️  Test user already exists');
             }
+            console.log('🎉 Data seeding completed successfully!');
         }
         catch (error) {
             console.error('❌ Error seeding data:', error);

@@ -18,13 +18,22 @@ async function bootstrap() {
         forbidNonWhitelisted: true,
         transform: true,
     }));
-    const migrationService = app.get(migration_service_1.MigrationService);
-    await migrationService.migrateUsers();
-    const seedService = app.get(seed_service_1.SeedService);
-    await seedService.seed();
     const port = process.env.PORT || 3001;
     await app.listen(port);
     console.log(`🚀 Application is running on: http://localhost:${port}`);
+    setTimeout(() => {
+        (async () => {
+            try {
+                const migrationService = app.get(migration_service_1.MigrationService);
+                await migrationService.migrateUsers();
+                const seedService = app.get(seed_service_1.SeedService);
+                await seedService.seed();
+            }
+            catch (error) {
+                console.error('❌ Error during startup services:', error);
+            }
+        })();
+    }, 1000);
 }
 bootstrap();
 //# sourceMappingURL=main.js.map

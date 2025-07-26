@@ -25,23 +25,47 @@ let MigrationService = class MigrationService {
     async migrateUsers() {
         try {
             console.log('🔄 Starting user migration...');
-            const usersToMigrate = await this.userModel.find({
-                role: { $exists: true },
-                $or: [
-                    { roles: { $exists: false } },
-                    { roles: { $size: 0 } }
-                ]
-            });
-            console.log(`📊 Found ${usersToMigrate.length} users to migrate`);
-            for (const user of usersToMigrate) {
-                const roles = user.role ? [user.role] : ['deposition_manager'];
-                await this.userModel.findByIdAndUpdate(user._id, {
-                    $set: { roles },
-                    $unset: { role: 1 }
+            const batchSize = 50;
+            let skip = 0;
+            let hasMore = true;
+            let totalMigrated = 0;
+            while (hasMore) {
+                const usersToMigrate = await this.userModel.find({
+                    role: { $exists: true },
+                    $or: [
+                        { roles: { $exists: false } },
+                        { roles: { $size: 0 } }
+                    ]
+                })
+                    .limit(batchSize)
+                    .skip(skip)
+                    .lean();
+                if (usersToMigrate.length === 0) {
+                    hasMore = false;
+                    break;
+                }
+                console.log(`📊 Processing batch of ${usersToMigrate.length} users (skip: ${skip})`);
+                const updatePromises = usersToMigrate.map(async (user) => {
+                    try {
+                        const roles = user.role ? [user.role] : ['deposition_manager'];
+                        await this.userModel.findByIdAndUpdate(user._id, {
+                            $set: { roles },
+                            $unset: { role: 1 }
+                        });
+                        console.log(`✅ Migrated user: ${user.email} - roles: [${roles.join(', ')}]`);
+                        return true;
+                    }
+                    catch (error) {
+                        console.error(`❌ Failed to migrate user ${user.email}:`, error);
+                        return false;
+                    }
                 });
-                console.log(`✅ Migrated user: ${user.email} - roles: [${roles.join(', ')}]`);
+                const results = await Promise.all(updatePromises);
+                totalMigrated += results.filter(Boolean).length;
+                skip += batchSize;
+                await new Promise(resolve => setTimeout(resolve, 100));
             }
-            console.log('🎉 User migration completed successfully!');
+            console.log(`🎉 User migration completed successfully! Total migrated: ${totalMigrated}`);
         }
         catch (error) {
             console.error('❌ Error during migration:', error);
