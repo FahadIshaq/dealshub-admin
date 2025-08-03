@@ -6,6 +6,7 @@ import { AppService } from './services/app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { PropertiesModule } from './modules/properties/properties.module';
+import { InvestorsModule } from './modules/investors/investors.module';
 import { SeedService } from './services/seed/seed.service';
 import { MigrationService } from './services/seed/migration.service';
 import { User, UserSchema } from './models/user.model';
@@ -20,6 +21,7 @@ import { User, UserSchema } from './models/user.model';
     AuthModule,
     UsersModule,
     PropertiesModule,
+    InvestorsModule,
   ],
   controllers: [AppController],
   providers: [AppService, SeedService, MigrationService],

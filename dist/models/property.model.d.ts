@@ -1,5 +1,7 @@
 import { Document } from 'mongoose';
+export type PropertyDocument = Property & Document;
 export declare class Property extends Document {
+    userId: string;
     title: string;
     description: string;
     address: {

@@ -1,8 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
+
+export type PropertyDocument = Property & Document;
 
 @Schema({ timestamps: true })
 export class Property extends Document {
+  @Prop({ type: String, required: true })
+  userId: string; // Reference to the wholesaler who owns this property
+
   @Prop({ required: true })
   title: string;
 

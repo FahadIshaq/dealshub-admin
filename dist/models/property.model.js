@@ -13,6 +13,7 @@ exports.PropertySchema = exports.Property = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 let Property = class Property extends mongoose_2.Document {
+    userId;
     title;
     description;
     address;
@@ -31,6 +32,10 @@ let Property = class Property extends mongoose_2.Document {
     thirdViewLink;
 };
 exports.Property = Property;
+__decorate([
+    (0, mongoose_1.Prop)({ type: String, required: true }),
+    __metadata("design:type", String)
+], Property.prototype, "userId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)

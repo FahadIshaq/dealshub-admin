@@ -15,6 +15,7 @@ const app_service_1 = require("./services/app.service");
 const auth_module_1 = require("./modules/auth/auth.module");
 const users_module_1 = require("./modules/users/users.module");
 const properties_module_1 = require("./modules/properties/properties.module");
+const investors_module_1 = require("./modules/investors/investors.module");
 const seed_service_1 = require("./services/seed/seed.service");
 const migration_service_1 = require("./services/seed/migration.service");
 const user_model_1 = require("./models/user.model");
@@ -32,6 +33,7 @@ exports.AppModule = AppModule = __decorate([
             auth_module_1.AuthModule,
             users_module_1.UsersModule,
             properties_module_1.PropertiesModule,
+            investors_module_1.InvestorsModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, seed_service_1.SeedService, migration_service_1.MigrationService],
